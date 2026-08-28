@@ -1,0 +1,6 @@
+en.subject.pdf
+.vagrant/
+**/.vagrant/
+**/confs/node-token
+!**/confs/.gitkeep
+.DS_Store
