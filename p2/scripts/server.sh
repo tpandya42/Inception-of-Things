@@ -1,5 +1,5 @@
 #!/bin/bash
-set -eu
+set -euo pipefail
 
 # SERVER PROVISIONING
 # single-node K3s cluster + three apps
