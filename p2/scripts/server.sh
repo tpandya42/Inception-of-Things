@@ -4,7 +4,7 @@ set -euo pipefail
 # SERVER PROVISIONING
 # single-node K3s cluster + three apps
 
-apt-get update -y >/dev/null    # curl comes in box: adding for consistency with p1
+apt-get update -y >/dev/null    # curl comes in box: adding this and next line for consistency with p1
 apt-get install -y curl >/dev/null
 
 IP="192.168.56.110"
