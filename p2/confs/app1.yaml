@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment      # what type of thing this declaration is
+metadata:
+  name: app1
+spec:                 # what I want
+  replicas: 1         # how many identical pods to keep alive
+  selector:           # which pods does this Deployment consider its own?
+    matchLabels:
+      app: app1       # the tag of the pods I manage
+  template:           # blueprint for each pod
+    metadata:
+      labels:
+        app: app1
+    spec:
+      containers:
+      - name: app1
+        image: traefik/whoami:latest
+        ports:
+        - containerPort: 80  # the number the pods actually answer on
+        env:
+        - name: WHOAMI_NAME
+          value: "Hello, from app1 and Simona."
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: app1
+spec:
+  selector:
+    app: app1
+  ports:
+    - port: 80              # public facing web port
+      targetPort: 80        # the port the app inside the container actually listens on
