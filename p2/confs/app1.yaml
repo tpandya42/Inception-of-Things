@@ -14,7 +14,7 @@ spec:                 # what I want
     spec:
       containers:
       - name: app1
-        image: traefik/whoami:latest
+        image: traefik/whoami:v1.12.0
         ports:
         - containerPort: 80  # the number the pods actually answer on
         env:
