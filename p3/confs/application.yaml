@@ -8,7 +8,7 @@ spec:
   project: default
   source:                 # where the desired state comes from
     repoURL: https://github.com/kebl3541/saimar-iot
-    targetRevision: HEAD  # HEAD means latest commit on default branch 
+    targetRevision: main  # track the tip of the main branch 
     path: app
   destination:            # where to deploy the manifests
     server: https://kubernetes.default.svc

@@ -26,15 +26,19 @@ kubectl apply -n argocd --server-side \
 
 # 4. Wait until Argo CD is actually ready 
 # 4a) first we get the CRD (Custom Resource Definition)
-until kubectl get crd applications.argoproj.io >/dev/null 2>&1; do
+for i in {1..60}; do
+    kubectl get crd applications.argoproj.io >/dev/null 2>&1 && break
     sleep 1
 done
+kubectl get crd applications.argoproj.io >/dev/null 2>&1 || { echo "Timed out waiting for the Argo CD CRD" >&2; exit 1; }
 # 4b) then we make sure it is usable 
 kubectl wait --for=condition=Established crd/applications.argoproj.io --timeout=120s
 # 4c) same thing for the server
-until kubectl get deploy/argocd-server -n argocd >/dev/null 2>&1; do
+for i in {1..60}; do
+    kubectl get deploy/argocd-server -n argocd >/dev/null 2>&1 && break
     sleep 1
 done
+kubectl get deploy/argocd-server -n argocd >/dev/null 2>&1 || { echo "Timed out waiting for the argocd-server deployment" >&2; exit 1; }
 kubectl wait --for=condition=Available deploy/argocd-server -n argocd --timeout=300s
 
 # 5. The pointer: watch the repo, deploy to dev
@@ -51,8 +55,9 @@ echo "  kubectl port-forward svc/playground -n dev 8888:8888"
 
 echo
 echo "Argo CD UI:"
-echo "  kubectl port-forward svc/argocd-server -n argocd 8080:80"
-echo "  open http://localhost:8080  (user: admin)"
+echo "  kubectl port-forward svc/argocd-server -n argocd 8080:443"
+echo "  open https://localhost:8080  (user: admin)"
+echo "  the browser warns about the self-signed certificate, that is expected"
 echo -n "  password: "
 for i in {1..120}; do
     kubectl get secret argocd-initial-admin-secret -n argocd >/dev/null 2>&1 && break
