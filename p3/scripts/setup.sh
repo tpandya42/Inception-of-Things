@@ -15,9 +15,7 @@ else
 fi
 
 # 2. Namespaces
-for ns in argocd dev; do
-    kubectl create namespace "$ns" --dry-run=client -o yaml | kubectl apply -f -
-done
+kubectl apply -f "$CONFS/namespaces.yaml"
 
 # 3. Argo CD
 kubectl apply -n argocd --server-side \
