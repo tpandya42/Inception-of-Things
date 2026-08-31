@@ -54,9 +54,11 @@ echo "Argo CD UI:"
 echo "  kubectl port-forward svc/argocd-server -n argocd 8080:80"
 echo "  open http://localhost:8080  (user: admin)"
 echo -n "  password: "
-until kubectl get secret argocd-initial-admin-secret -n argocd >/dev/null 2>&1; do
+for i in {1..120}; do
+    kubectl get secret argocd-initial-admin-secret -n argocd >/dev/null 2>&1 && break
     sleep 1
 done
+kubectl get secret argocd-initial-admin-secret -n argocd >/dev/null 2>&1 || { echo "Timed out waiting for argocd-initial-admin-secret" >&2; exit 1; }
 kubectl -n argocd get secret argocd-initial-admin-secret \
   -o jsonpath='{.data.password}' | base64 -d
 echo
