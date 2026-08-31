@@ -1,0 +1,21 @@
+# Argo CD application
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: playground
+  namespace: argocd
+spec:
+  project: default
+  source:                 # where the desired state comes from
+    repoURL: https://github.com/kebl3541/saimar-iot
+    targetRevision: HEAD  # HEAD means latest commit on default branch 
+    path: app
+  destination:            # where to deploy the manifests
+    server: https://kubernetes.default.svc
+    namespace: dev
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+    - CreateNamespace=true
