@@ -22,7 +22,7 @@ done
 # 3. Argo CD
 kubectl apply -n argocd --server-side \
     -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml \
-    >/dev/null 2>&1
+    >/dev/null
 
 # 4. Wait until Argo CD is actually ready 
 # 4a) first we get the CRD (Custom Resource Definition)
