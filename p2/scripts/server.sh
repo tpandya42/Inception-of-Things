@@ -20,8 +20,10 @@ curl -sfL https://get.k3s.io | sh -s - server \
     --flannel-iface "$IFACE" \
     --write-kubeconfig-mode 644
 
-until kubectl get nodes >/dev/null 2>&1; do
+for i in {1..60}; do
+    kubectl get nodes >/dev/null 2>&1 && break
     sleep 2
 done
+kubectl get nodes >/dev/null 2>&1 || { echo "Timed out waiting for k3s to become ready" >&2; exit 1; }
 
 kubectl apply -f /vagrant/confs
