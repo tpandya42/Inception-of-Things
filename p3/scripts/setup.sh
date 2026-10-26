@@ -29,7 +29,25 @@ echo "-> Apply ArgoCD Application"
 kubectl apply -f /home/tpandya/Inception-of-Things/p3/confs/argocd-application.yaml
 
 echo "-> Wait for app sync"
-kubectl wait --for=condition=Synced application/playground -n argocd --timeout=300s || true
+TIMEOUT=300
+ELAPSED=0
+while [ "$ELAPSED" -lt "$TIMEOUT" ]; do
+	STATUS=$(kubectl get application playground -n argocd \
+		-o jsonpath='{.status.sync.status}
+	{.status.health.status}')
+
+		echo "Sync/Health: $STATUS"
+
+		[ "$STATUS" = "Synced Healthy" ] && break
+
+		sleep 5
+		ELAPSED=$((ELAPSED + 5))
+	done
+
+	[ "$STATUS" = "Synced Healthy" ] || {
+		echo "Error: Can't sync"
+		exit
+	}
 
 echo "-> ArgoCD initial admin password:"
 kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d;
