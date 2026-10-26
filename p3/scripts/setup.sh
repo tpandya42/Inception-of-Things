@@ -33,8 +33,7 @@ TIMEOUT=300
 ELAPSED=0
 while [ "$ELAPSED" -lt "$TIMEOUT" ]; do
 	STATUS=$(kubectl get application playground -n argocd \
-		-o jsonpath='{.status.sync.status}
-	{.status.health.status}')
+		-o jsonpath='{.status.sync.status} {.status.health.status}')
 
 		echo "Sync/Health: $STATUS"
 
@@ -50,7 +49,7 @@ while [ "$ELAPSED" -lt "$TIMEOUT" ]; do
 	}
 
 echo "-> ArgoCD initial admin password:"
-kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d;
+kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d 2>/dev/null || echo "Secret not ready yet"
 echo
 
 echo "  ArgoCD UI: kubectl port-forward svc/argocd-server 8080:443 -n argocd  -> https://localhost:8080"
